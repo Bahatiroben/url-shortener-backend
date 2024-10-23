@@ -1,0 +1,2 @@
+## get all links
+GET http://localhost:3000/links
