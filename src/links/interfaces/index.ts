@@ -1,4 +1,5 @@
 
 export interface ILink {
-    longUrl: String;
+    longUrl?: string;
+    id?: number;
 }

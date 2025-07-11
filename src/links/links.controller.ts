@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { LinksService } from './links.service';
 import { createLinkDTO } from './dto/createLink.dto';
 
@@ -7,16 +7,18 @@ export class LinksController {
   constructor(private linksService: LinksService) {}
   @Get()
   findAll() {
-    return this.linksService;
+    return this.linksService.getAll();
   }
 
   @Get(':id')
-  findOne() {
-    
+  findOne(@Query() id: number) {
+    return this.linksService.findBy({id})
   }
 
   @Post()
-  create(link: createLinkDTO) {
+  create(@Body() link: createLinkDTO) {
     return this.linksService.create(link)
   }
+
+  
 }

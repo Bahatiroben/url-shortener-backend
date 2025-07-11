@@ -1,0 +1,20 @@
+version: "3"
+services:
+  db:
+    image:  postgres:13.1-alpine
+    restart: always
+    env_file:
+      - .env
+    # volume below can be used to create an entry point script to create dbs and users
+    # volumes:
+    # - ./create-dev-db.sh:/docker-entrypoint-initdb.d/create-dev-db.sh
+    ports:
+      - "5432:5432"
+    environment:
+      # un comment the line below if you need to use a db without a password. preferably in local development
+      POSTGRES_HOST_AUTH_METHOD: trust
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: db # must be same as the name of the db service if no other networks are configured

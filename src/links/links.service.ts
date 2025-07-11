@@ -16,13 +16,16 @@ export class LinksService {
 
     }
 
-
     async create(link: ILink): Promise<Link> {
         const shortUrl = this.utils.createShortUrl()
         const validUntil = this.utils.getUrlValidUntilDate();
         const isActive = validUntil && true; // active should depend on whether the valid until was found
+        
+        return this.linkRepository.save({...link, shortUrl, validUntil, isActive});
+    }
 
-        return this.linkRepository.create({...link, shortUrl, validUntil, isActive})
+    async update(id: number, partialLink: ILink): Promise<Link> {
+        return (await this.linkRepository.update({id}, partialLink)).raw;
     }
     
     async getAll(): Promise<Link[]> {
@@ -33,5 +36,9 @@ export class LinksService {
         return this.linkRepository.find({
             where: params
         })
+    }
+
+    async deleteById(id: number): Promise<number> {
+        return (await this.linkRepository.softDelete(id)).affected;
     }
 }

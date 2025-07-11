@@ -8,6 +8,9 @@ import { LinksService } from './links/links.service';
 import configurations from './config'
 import { ConfigService } from '@nestjs/config';
 import { LinksModule } from './links/links.module';
+import { UserController } from './user/user.controller';
+import { UserService } from './user/user.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -18,14 +21,15 @@ import { LinksModule } from './links/links.module';
     useFactory: async (configService: ConfigService) => ({
       type: 'postgres',
       url: configService.get('DATABASE_URL'),
-      synchronize: true, //TODO:  Set to false in production
+      synchronize: process.env.NODE_ENV === 'DEV',
       autoLoadEntities: true
     }),
     inject: [ConfigService]
 }),
-LinksModule
+LinksModule,
+UserModule,
 ],
-  controllers: [AppController, LinksController],
-  providers: [AppService, LinksService],
+  controllers: [AppController, LinksController, UserController],
+  providers: [AppService, LinksService, UserService],
 })
 export class AppModule {}
