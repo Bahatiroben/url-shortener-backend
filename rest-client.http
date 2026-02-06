@@ -1,2 +1,9 @@
-## get all links
-GET http://localhost:3000/links
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+    "username": "sample-user1",
+    "password": "password"
+}
+
+

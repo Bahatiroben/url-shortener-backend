@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "./user.entity";
+import { UserEntity } from "./user.entity";
 import { Repository } from "typeorm";
 import { IUser, IUserGetBy } from "./interfaces";
 import { hashPassword } from "./utils";
@@ -9,19 +9,24 @@ import { hashPassword } from "./utils";
 export class UserService {
 
     constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>
+        @InjectRepository(UserEntity)
+        private userRepository: Repository<UserEntity>
     ) {
 
     }
 
-    async create(user: IUser) {
-        const hashedPassword = await hashPassword(user.password);
-        return this.userRepository.save({...user, password: hashedPassword});
+    async create(user: IUser): Promise<UserEntity> {
+        return this.userRepository.save(user);
     }
 
-    async getBy(params: IUserGetBy) {
+    async findUserBy(params: IUserGetBy): Promise<UserEntity> {
         return this.userRepository.findOne({
+            where: params
+        });
+    }
+
+    async getAllBy(params: IUserGetBy): Promise<UserEntity[]> {
+        return this.userRepository.find({
             where: params
         });
     }

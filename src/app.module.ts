@@ -11,12 +11,13 @@ import { LinksModule } from './modules/links/links.module';
 import { UserController } from './modules/user/user.controller';
 import { UserService } from './modules/user/user.service';
 import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-    isGlobal: true,
-    load: [configurations]
+      isGlobal: true,
+      load: [configurations],
     }),
     TypeOrmModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
@@ -29,6 +30,7 @@ import { UserModule } from './modules/user/user.module';
     }),
     LinksModule,
     UserModule,
+    AuthModule
 ],
   controllers: [AppController, LinksController, UserController],
   providers: [AppService, LinksService, UserService],

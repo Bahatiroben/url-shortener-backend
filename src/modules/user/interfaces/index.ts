@@ -1,12 +1,12 @@
 export interface IUser {
-    id?: number;
+    id?: string;
     username: string;
     email: string;
     password: string;
 }
 
 export interface IUserGetBy {
-    id?: number;
+    id?: string;
     username?: string;
     email?: string;
 }

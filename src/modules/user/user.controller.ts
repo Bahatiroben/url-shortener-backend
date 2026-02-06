@@ -10,10 +10,4 @@ export class UserController {
 
     }
 
-    @Post()
-    async signup(
-        @Body() createUserDto: CreateUserDto
-    ) {
-        const userDetails = this.userService.create(createUserDto)
-    }
 }
