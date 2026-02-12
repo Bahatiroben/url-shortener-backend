@@ -12,12 +12,21 @@ import { UserController } from './modules/user/user.controller';
 import { UserService } from './modules/user/user.service';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configurations],
+    }),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          secret: configService.get<string>('JWT_SECRET'),
+          signOptions: { expiresIn: '1h' },
+        }),
+        global: true,
     }),
     TypeOrmModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({

@@ -1,3 +1,5 @@
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ5ZDUxNTc4LWE4YjUtNDlhNi1iMjQwLWI5NGZhNGE0NTc1ZSIsInVzZXJuYW1lIjoic2FtcGxlLXVzZXIxIiwiZW1haWwiOiJiYWhhdGlyb2JlbjMyNTFAZ21haWwuY29tIiwiaWF0IjoxNzcwODkzMzI5LCJleHAiOjE3NzA4OTY5Mjl9.4GK5-tVCsQFntAldlmpVehg4FTn0bPJuwc1R2zilf60
+
 POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
@@ -7,3 +9,31 @@ Content-Type: application/json
 }
 
 
+### Register user and save access_token to the variables
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+    "username": "sample-user1",
+    "password": "password",
+    "email": "sample-user1@example.com"
+}
+
+
+### Get links
+GET http://localhost:3000/links
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+
+### Create a new link, by adding headers and authorization with bearer token
+POST http://localhost:3000/links
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "originalUrl": "https://www.google.com",
+    "title": "Google Search",
+    "description": "Search engine for the web",
+    "validUntil": "2026-12-31T23:59:59Z"
+}

@@ -1,19 +1,31 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { UserEntity } from '../user/user.entity';
 
 @Entity()
 export class Link {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    longUrl: String;
+    @Column({ nullable: false })
+    originalUrl: String;
 
-    @Column()
-    shortUrl: String;
+    @Column({unique: true, nullable: false})
+    shortCode: String;
 
+    
+    @ManyToOne(() => UserEntity, user => user.id, { onDelete: 'SET NULL' })
     @Column()
-    validUntil: Date;
+    userId: String;
 
     @Column({ default: true })
     isActive: Boolean;
+
+    @Column({nullable: false})
+    validUntil: Date;
+
+    @Column({nullable: false})
+    title: String;
+
+    @Column()
+    description: String;
 }
