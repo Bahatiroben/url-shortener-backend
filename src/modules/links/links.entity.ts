@@ -4,7 +4,7 @@ import { UserEntity } from '../user/user.entity';
 @Entity()
 export class Link {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
 
     @Column({ nullable: false })
     originalUrl: String;

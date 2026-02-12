@@ -10,6 +10,11 @@ export interface ILink {
     description?: string;
 }
 
+export interface IFindLinksBy {
+    userId?: string;
+    organizationId?: string;
+}
+
 export interface IUpdateLink {
     originalUrl?: string;
     isActive?: boolean;

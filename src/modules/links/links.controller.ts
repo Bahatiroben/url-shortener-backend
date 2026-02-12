@@ -6,15 +6,16 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 @Controller('links')
 export class LinksController {
   constructor(private linksService: LinksService) {}
-  // @Get()
-  // findAll() {
-  //   return this.linksService.getAll();
-  // }
+  @Get()
+  findAll(@Request() request: any) {
+    const userId = request.user?.id;
+    return this.linksService.findBy({userId});
+  }
 
-  // @Get(':id')
-  // findOne(@Query() id: number) {
-  //   return this.linksService.findBy({id})
-  // }
+  @Get(':id')
+  findOne(@Query() id: string) {
+    return this.linksService.findById(id)
+  }
 
   @UseGuards(AuthGuard)
   @Post()

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Link } from './links.entity';
-import { ILink, IUpdateLink, IGetLInksBy } from './interfaces';
+import { IFindLinksBy, IUpdateLink, IGetLInksBy } from './interfaces';
 import { Utils } from './utils';
 import { createLinkDTO } from './dto/createLink.dto';
 
@@ -15,6 +15,14 @@ export class LinksService {
         private utils: Utils
     ) {
 
+    }
+
+    async findById(id: string): Promise<Link> {
+        return this.linkRepository.findOne({
+            where: {
+                id
+            }
+        })
     }
 
     async create(link: createLinkDTO, userId: string): Promise<Link> {
@@ -34,7 +42,7 @@ export class LinksService {
         })
     }
 
-    async findBy(params: ILink): Promise<Link[]>{
+    async findBy(params: IFindLinksBy): Promise<Link[]>{
         return this.linkRepository.find({
             where: params
         })
