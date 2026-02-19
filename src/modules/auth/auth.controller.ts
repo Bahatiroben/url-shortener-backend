@@ -1,6 +1,6 @@
-import { Body, Controller, NotImplementedException, Post} from '@nestjs/common';
-import { AuthService } from 'src/modules/auth/auth.service';
-import { LoginDto } from 'src/modules/auth/dtos/login.dto';
+import { Body, Controller, Post} from '@nestjs/common';
+import { LoginDto } from './dtos/login.dto';
+import { AuthService } from './auth.service';
 import { IAuthResult } from './interfaces';
 import { CreateUserDto } from '../user/createUser.dto.ts/createUser.dto';
 

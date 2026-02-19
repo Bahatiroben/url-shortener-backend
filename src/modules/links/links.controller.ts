@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards, Request, Param, ParseUUIDPipe } from '@nestjs/common';
 import { LinksService } from './links.service';
 import { createLinkDTO } from './dto/createLink.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -7,13 +7,14 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 export class LinksController {
   constructor(private linksService: LinksService) {}
   @Get()
-  findAll(@Request() request: any) {
+  findAll(@Request() request: any, @Query() queryParams: any) {
+    const filters = queryParams.filters;
     const userId = request.user?.id;
-    return this.linksService.findBy({userId});
+    return this.linksService.findBy({userId}, filters);
   }
 
   @Get(':id')
-  findOne(@Query() id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.linksService.findById(id)
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LessThanOrEqual, Equal, MoreThanOrEqual } from 'typeorm';
 import { Link } from './links.entity';
 import { IFindLinksBy, IUpdateLink, IGetLInksBy } from './interfaces';
 import { Utils } from './utils';
@@ -32,7 +33,7 @@ export class LinksService {
         return this.linkRepository.save({...link, shortCode, validUntil, isActive, userId});
     }
 
-    async update(id: number, partialLink: IUpdateLink): Promise<Link> {
+    async update(id: string, partialLink: IUpdateLink): Promise<Link> {
         return (await this.linkRepository.update({id}, partialLink)).raw;
     }
     
@@ -42,12 +43,18 @@ export class LinksService {
         })
     }
 
-    async findBy(params: IFindLinksBy): Promise<Link[]>{
+    async findBy(params: IFindLinksBy, filters?: any): Promise<Link[]>{
+        const {isActive, validUntil: {lte, gte, eq}, } = filters || {};
         return this.linkRepository.find({
-            where: params
+            where: {
+                ...params,
+                ...(isActive !== undefined && {isActive}),
+                ...(lte && {validUntil: LessThanOrEqual(lte)}),
+                ...(gte && {validUntil: MoreThanOrEqual(gte)}),
+                ...(eq && {validUntil: Equal(eq)}),
+            }
         })
     }
-
     async deleteById(id: number): Promise<number> {
         return (await this.linkRepository.softDelete(id)).affected;
     }

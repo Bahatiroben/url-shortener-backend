@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 
-@Entity()
+@Entity({
+    name: 'links'
+})
 export class Link {
     @PrimaryGeneratedColumn()
     id: string;
