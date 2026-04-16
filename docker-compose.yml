@@ -1,5 +1,13 @@
 version: "3"
 services:
+  # inlcude a redis service for caching and rate limiting if needed
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env
   db:
     image:  postgres:13.1-alpine
     restart: always
