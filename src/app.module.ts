@@ -3,8 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LinksController } from './modules/links/links.controller';
-import { LinksService } from './modules/links/links.service';
 import { RedisConfig, PostgresConfig, JwtConfig } from './common/config';
 import { ConfigService } from '@nestjs/config';
 import { UserController } from './modules/users/user.controller';
@@ -45,7 +43,7 @@ import { ShortenerModule } from './modules/shortener/shortener.module';
     TeamsModule,
     ShortenerModule
 ],
-  controllers: [AppController, LinksController, UserController],
-  providers: [AppService, LinksService, UserService],
+  controllers: [AppController, UserController],
+  providers: [AppService, UserService],
 })
 export class AppModule {}

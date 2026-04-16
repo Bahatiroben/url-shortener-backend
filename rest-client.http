@@ -10,13 +10,14 @@ Content-Type: application/json
 
 
 ### Register user and save access_token to the variables
-POST http://localhost:3000/auth/signup
+POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "username": "sample-user1",
+    "name": "sample-user1",
     "password": "password",
-    "email": "sample-user1@example.com"
+    "email": "sample-user1@example.com",
+    "role": "user"
 }
 
 

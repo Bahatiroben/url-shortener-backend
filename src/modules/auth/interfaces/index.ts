@@ -1,6 +1,6 @@
-import { UserEntity } from "src/modules/users/user.entity";
+import { User } from "src/modules/users/entities";
 
-export interface IValidatedUser extends Omit<UserEntity, "password"> {}
+export interface IValidatedUser extends Omit<User, "password"> {}
 
 export interface IAuthResult extends IValidatedUser {
     accessToken: string;
