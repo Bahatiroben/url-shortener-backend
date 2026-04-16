@@ -1,8 +1,7 @@
-// src/shortener/redirect.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UrlMapping } from './entities/url-mapping.entity';
+import { UrlMapping } from './entities';
 import { RedirectResult } from './dtos';
 import { ShortenerService } from './shortener.service';
 
