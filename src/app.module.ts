@@ -8,9 +8,9 @@ import { LinksService } from './modules/links/links.service';
 import configurations from './config'
 import { ConfigService } from '@nestjs/config';
 import { LinksModule } from './modules/links/links.module';
-import { UserController } from './modules/user/user.controller';
-import { UserService } from './modules/user/user.service';
-import { UserModule } from './modules/user/user.module';
+import { UserController } from './modules/users/user.controller';
+import { UserService } from './modules/users/user.service';
+import { UserModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 
