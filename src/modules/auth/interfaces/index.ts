@@ -1,4 +1,4 @@
-import { UserEntity } from "src/modules/user/user.entity";
+import { UserEntity } from "src/modules/users/user.entity";
 
 export interface IValidatedUser extends Omit<UserEntity, "password"> {}
 
