@@ -45,7 +45,6 @@ export abstract class BaseController {
     return {
       success: true,
       message: 'Operation completed successfully',
-      timestamp: new Date().toISOString(),
     };
   }
 
