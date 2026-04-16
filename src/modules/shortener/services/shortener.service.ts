@@ -1,9 +1,9 @@
 import { Injectable, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseService } from '../../common/base/base.service';
-import { UrlMapping } from './entities';
-import { CreateShortLinkDto, UpdateLinkDto } from './dtos';
+import { BaseService } from '../../../common/base/base.service';
+import { UrlMapping } from '../entities';
+import { CreateShortLinkDto, UpdateLinkDto } from '../dtos';
 import { KeyGeneratorService } from './key-generator.service';   
 
 @Injectable()
