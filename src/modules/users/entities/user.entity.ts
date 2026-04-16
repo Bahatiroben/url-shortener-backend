@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany } from 'typeorm';
 import { UrlMapping } from '../../shortener/entities/url-mapping.entity';
 import { Team } from '../../teams/entities';
 
@@ -24,6 +24,10 @@ export class User {
 
   @OneToMany(() => Team, (team) => team.owner)
   ownedTeams: Team[];
+
+  @ManyToMany(() => Team, (team) => team.members)
+  teams: Team[]; 
+
 
   @CreateDateColumn()
   createdAt: Date;

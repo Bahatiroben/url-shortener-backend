@@ -8,7 +8,7 @@ import { LinksService } from './modules/links/links.service';
 import { RedisConfig, PostgresConfig, JwtConfig } from './common/config';
 import { ConfigService } from '@nestjs/config';
 import { UserController } from './modules/users/user.controller';
-import { UserService } from './modules/users/user.service';
+import { UserService } from './modules/users/services';
 import { UserModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';

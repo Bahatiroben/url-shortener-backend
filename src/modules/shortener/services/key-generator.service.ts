@@ -2,7 +2,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RedisService } from '../../common/redis/redis.service'; // Assume you have Redis module
+import { RedisService } from '../../../common/redis/services'; // Assume you have Redis module
 import { UrlMapping } from '../entities';
 
 @Injectable()

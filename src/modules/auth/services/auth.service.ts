@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from 'src/modules/users/user.service';
+import { UserService } from 'src/modules/users/services';
 import { LoginDto } from '../dtos/login.dto';
 import { IAuthResult, IValidatedUser } from '../interfaces';
 import { JwtService } from '@nestjs/jwt';
@@ -15,8 +15,8 @@ export class AuthService {
     ) {}
 
     async authenticate(loginDto: LoginDto): Promise<IAuthResult> {
-        const { username, password } = loginDto;
-        const user = await this.validateUser(username, password);
+        const { email, password } = loginDto;
+        const user = await this.validateUser(email, password);
         if(!user) {
             throw new UnauthorizedException("Invalid credentials");
         }
@@ -30,8 +30,8 @@ export class AuthService {
         return this.login(result);
     }
 
-    async validateUser(username: string, rawPassword: string): Promise<IValidatedUser | null> {
-        const user = await this.userService.findOneBy({username});
+    async validateUser(email: string, rawPassword: string): Promise<IValidatedUser | null> {
+        const user = await this.userService.findOneBy({email});
         const passwordMatches = user?.password && this.passwordUtil.comparePasswords(rawPassword, user?.password)
         if(!passwordMatches) {
             return null;
