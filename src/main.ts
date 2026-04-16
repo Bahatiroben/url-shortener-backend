@@ -18,7 +18,7 @@ async function bootstrap() {
 
   // Other configurations (CORS, ValidationPipe, Swagger, etc.)
   app.enableCors();
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api');
   
   await app.listen(3000);
 }

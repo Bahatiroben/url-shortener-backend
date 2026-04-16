@@ -6,7 +6,7 @@ import { CreateUserDto } from '../users/dtos';
 import { BaseController } from 'src/common/base';
 import { ApiResponse } from 'src/common/dto';
 
-@Controller('auth')
+@Controller('v1/auth')
 export class AuthController extends BaseController {
 
     constructor(private authService: AuthService) {

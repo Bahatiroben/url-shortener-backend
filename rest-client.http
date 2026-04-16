@@ -14,10 +14,10 @@ POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "name": "sample-user1",
+    "name": "sample-user22",
     "password": "password",
-    "email": "sample-user1@example.com",
-    "role": "user"
+    "email": "sample-user2e@example.com",
+    "role": "users"
 }
 
 
