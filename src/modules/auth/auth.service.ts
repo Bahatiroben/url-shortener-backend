@@ -23,14 +23,14 @@ export class AuthService {
         if(!user) {
             throw new UnauthorizedException("Invalid credentials");
         }
-        return this.signIn(user);
+        return this.login(user);
     }
 
-    async signup(createUserDto: CreateUserDto): Promise<IAuthResult> {
+    async register(createUserDto: CreateUserDto): Promise<IAuthResult> {
         const hashedPassword = this.passwordUtil.hashPassword(createUserDto.password);
         const user = await this.userService.create({...createUserDto, password: hashedPassword});
         const { password, ...result } = user;
-        return this.signIn(result);
+        return this.login(result);
     }
 
     async validateUser(username: string, rawPassword: string): Promise<IValidatedUser | null> {
@@ -44,7 +44,7 @@ export class AuthService {
         return result;
     }
 
-    async signIn(user: IValidatedUser): Promise<IAuthResult> {
+    async login(user: IValidatedUser): Promise<IAuthResult> {
         const accessToken = await this.jwtService.signAsync(user);
         return {
             ...user,

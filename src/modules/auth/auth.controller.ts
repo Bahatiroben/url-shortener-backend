@@ -11,15 +11,15 @@ export class AuthController {
         
     }
 
-    @Post('signin')
+    @Post('login')
     login(
         @Body() loginDto: LoginDto
     ): Promise<IAuthResult> {
         return this.authService.authenticate(loginDto);
     }
 
-    @Post('signup')
-    signup(@Body() createUserDto: CreateUserDto): Promise<IAuthResult> {
-        return this.authService.signup(createUserDto)
+    @Post('register')
+    register(@Body() createUserDto: CreateUserDto): Promise<IAuthResult> {
+        return this.authService.register(createUserDto)
     }
 }
