@@ -5,7 +5,7 @@ import { LoginDto } from './dtos/login.dto';
 import { IAuthResult, IValidatedUser } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { PasswordUtil } from './utils/password.util';
-import { CreateUserDto } from '../users/createUser.dto.ts/createUser.dto';
+import { CreateUserDto } from '../users/dtos';
 
 @Injectable()
 export class AuthService {
@@ -13,9 +13,7 @@ export class AuthService {
         private userService: UserService,
         private jwtService: JwtService,
         private passwordUtil: PasswordUtil
-    ) {
-
-    }
+    ) {}
 
     async authenticate(loginDto: LoginDto): Promise<IAuthResult> {
         const { username, password } = loginDto;
@@ -34,7 +32,7 @@ export class AuthService {
     }
 
     async validateUser(username: string, rawPassword: string): Promise<IValidatedUser | null> {
-        const user = await this.userService.findUserBy({username});
+        const user = await this.userService.findOneBy({username});
         const passwordMatches = user?.password && this.passwordUtil.comparePasswords(rawPassword, user?.password)
         if(!passwordMatches) {
             return null;

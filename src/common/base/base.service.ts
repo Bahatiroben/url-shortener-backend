@@ -133,12 +133,11 @@ export abstract class BaseService<Entity, CreateDto = any, UpdateDto = any> {
   /**
    * Custom query wrapper for complex cases
    */
-  protected async executeQuery<T, R>(
-    queryFn: (params?: R) => Promise<T>,
-    params?: R,
+  protected async executeQuery<T>(
+    queryFn: () => Promise<T>,
   ): Promise<T> {
     try {
-      return await queryFn(params);
+      return await queryFn();
     } catch (error) {
       this.handleDatabaseError(error);
     }
