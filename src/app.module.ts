@@ -3,10 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RedisConfig, PostgresConfig, JwtConfig } from './common/config';
+
+import RedisConfig  from './common/config/redis.config';
+import JwtConfig from './common/config/jwt.config';
+import PostgresConfig  from './common/config/postgres.config';
 import { ConfigService } from '@nestjs/config';
-import { UserController } from './modules/users/user.controller';
-import { UserService } from './modules/users/services';
+
 import { UserModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
@@ -40,10 +42,10 @@ import { ShortenerModule } from './modules/shortener/shortener.module';
     UserModule,
     AuthModule,
     RedisModule,
+    ShortenerModule,
     TeamsModule,
-    ShortenerModule
 ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

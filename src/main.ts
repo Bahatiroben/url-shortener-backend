@@ -5,7 +5,7 @@ import { HttpExceptionFilter } from './common/filters';
 import { ResponseInterceptor } from './common/interceptors';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { abortOnError: false });
 
     // Global Response Wrapper
   app.useGlobalInterceptors(new ResponseInterceptor());
@@ -22,4 +22,7 @@ async function bootstrap() {
   
   await app.listen(3000);
 }
-bootstrap();
+bootstrap().catch(err => {
+  console.error('Error starting the application', err);
+  console.log({err})
+});
