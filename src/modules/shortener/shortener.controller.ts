@@ -1,8 +1,10 @@
-import { Controller, Post, Get, Patch, Delete, Body, Param, Query } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { BaseController } from '../../common/base/base.controller';
 import { ShortenerService } from './services';
 import { CreateShortLinkDto, UpdateLinkDto } from './dtos';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('v1/links')
 export class ShortenerController extends BaseController {
   constructor(private readonly shortenerService: ShortenerService) {
@@ -34,6 +36,7 @@ export class ShortenerController extends BaseController {
     );
   }
 
+  
   @Patch(':shortKey')
   async update(@Param('shortKey') shortKey: string, @Body() dto: UpdateLinkDto) {
     return this.updateResponse(
