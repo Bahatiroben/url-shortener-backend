@@ -8,10 +8,10 @@ export class RedirectController {
 
   @Get(':shortKey')
   async redirect(@Param('shortKey') shortKey: string, @Res() res: Response) {
-    const result = await this.redirectService.resolveShortKey(shortKey);
+    const longUrl = await this.redirectService.resolveShortKey(shortKey);
 
     // 301 Permanent Redirect (best for SEO and caching)
-    return res.redirect(HttpStatus.MOVED_PERMANENTLY, result.longUrl);
+    return res.redirect(HttpStatus.MOVED_PERMANENTLY, longUrl);
   }
 
   // Support custom domains later: @Get(':domain/:shortKey')
