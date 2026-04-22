@@ -62,7 +62,15 @@ export class KeyGeneratorService implements OnModuleInit {
       // Buffer is empty — generate one key inline immediately so the request
       // is never blocked. This is a rare fallback (cold start / Redis hiccup).
       this.logger.warn('Key buffer empty — falling back to inline generation');
-      return this.generateInlineKey();
+          // Proactive async refill — fire and forget, never awaited
+      try {
+        return this.generateInlineKey(); 
+      } finally {
+        this.logger.info('Triggering background refill after inline generation');
+        this.triggerRefillIfNeeded().catch((err) =>
+          this.logger.error('Background refill failed', err),
+        );
+      }
     }
  
     // Proactive async refill — fire and forget, never awaited
