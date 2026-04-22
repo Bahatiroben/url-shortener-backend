@@ -18,6 +18,10 @@ export class RedisService implements OnModuleDestroy {
     this.client.on('error', (err) => console.error('Redis Client Error:', err));
   }
 
+  getClient() {
+    return this.client
+  }
+
   // Basic operations
   async get(key: string): Promise<string | null> {
     return this.client.get(key);
