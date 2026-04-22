@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany } from 'typeorm';
-import { UrlMapping } from '../../shortener/entities/url-mapping.entity';
-import { Team } from '../../teams/entities';
+import { UrlMapping } from '@modules/shortener/entities/url-mapping.entity';
+import { Team } from '@modules/teams/entities';
 
 @Entity('users')
 export class User {

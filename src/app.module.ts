@@ -4,17 +4,17 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import RedisConfig  from './common/config/redis.config';
-import JwtConfig from './common/config/jwt.config';
-import PostgresConfig  from './common/config/postgres.config';
+import RedisConfig  from '@common/config/redis.config';
+import JwtConfig from '@common/config/jwt.config';
+import PostgresConfig  from '@common/config/postgres.config';
 import { ConfigService } from '@nestjs/config';
 
-import { UserModule } from './modules/users/user.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from '@modules/users/user.module';
+import { AuthModule } from '@modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
-import { RedisModule } from './common/redis/redis.module';
-import { TeamsModule } from './modules/teams/teams.module';
-import { ShortenerModule } from './modules/shortener/shortener.module';
+import { RedisModule } from '@common/redis/redis.module';
+import { TeamsModule } from '@modules/teams/teams.module';
+import { ShortenerModule } from '@modules/shortener/shortener.module';
 
 @Module({
   imports: [
