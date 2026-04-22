@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, ManyToMany } from 'typeorm';
-import { User } from '../../users/entities';
+import { User } from '@modules/users/entities';
 
 @Entity('teams')
 export class Team {

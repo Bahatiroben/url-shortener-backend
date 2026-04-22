@@ -1,8 +1,8 @@
 import { Controller, Post, Get, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { BaseController } from '../../common/base/base.controller';
+import { BaseController } from '@common/base/base.controller';
+import { AuthGuard } from '@modules/auth/guards';
 import { TeamsService } from './services';
 import { CreateTeamDto, UpdateTeamDto, AddTeamMemberDto } from './dtos';
-import { AuthGuard } from '../auth/guards/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('v1/teams')
