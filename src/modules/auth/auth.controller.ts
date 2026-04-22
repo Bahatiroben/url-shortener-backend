@@ -3,8 +3,8 @@ import { LoginDto } from './dtos/login.dto';
 import { AuthService } from './services';
 import { IAuthResult } from './interfaces';
 import { CreateUserDto } from '../users/dtos';
-import { BaseController } from 'src/common/base';
-import { ApiResponse } from 'src/common/dto';
+import { BaseController } from '@src/common/base';
+import { ApiResponse } from '@src/common/dto';
 
 @Controller('v1/auth')
 export class AuthController extends BaseController {
