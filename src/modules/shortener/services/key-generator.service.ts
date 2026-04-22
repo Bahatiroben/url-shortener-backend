@@ -95,11 +95,12 @@ export class KeyGeneratorService implements OnModuleInit {
  
     try {
       const count = await this.redisService.getListLength(REDIS_KEYS.KEY_BUFFER);
+      const currentBufferCount = Math.floor((count / BUFFER_SIZE) * 100);
       if (count < BUFFER_SIZE * REFILL_THRESHOLD) {
-        this.logger.log(`Buffer at ${count}/${BUFFER_SIZE} — preloading`);
+        this.logger.log(`Buffer at ${currentBufferCount}% — preloading`);
         await this.fillBuffer(BUFFER_SIZE - count);
       } else {
-        this.logger.log(`Buffer healthy at ${count} keys — no preload needed`);
+        this.logger.log(`Buffer healthy at ${currentBufferCount}% — no preload needed`);
       }
     } finally {
       await this.releaseLock(REDIS_KEYS.PRELOAD_LOCK);
@@ -206,7 +207,7 @@ export class KeyGeneratorService implements OnModuleInit {
    */
   private async acquireLock(lockKey: string): Promise<boolean> {
     const client = this.redisService.getClient();
-    const result = await client.set(lockKey, '1', 'NX', 'EX', LOCK_TTL_SECONDS);
+    const result = await client.set(lockKey, '1', 'EX', LOCK_TTL_SECONDS, 'NX');
     return result === 'OK';
   }
  
