@@ -1,8 +1,8 @@
 import { Controller, Post, Get, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { BaseController } from '../../common/base/base.controller';
+import { BaseController } from '@common/base/base.controller';
 import { ShortenerService } from './services';
 import { CreateShortLinkDto, UpdateLinkDto } from './dtos';
-import { AuthGuard } from '../auth/guards/auth.guard';
+import { AuthGuard } from '@modules/auth/guards/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('v1/links')

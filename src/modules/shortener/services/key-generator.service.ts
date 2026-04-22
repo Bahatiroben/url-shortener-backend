@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { RedisService } from '../../../common/redis/services';
+import { RedisService } from '@common/redis/services';
 
 import { REDIS_KEYS, BUFFER_SIZE, REFILL_THRESHOLD, LOCK_TTL_SECONDS, COUNTER_SEED } from '../constants';
 

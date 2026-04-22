@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from '../../users/entities';
-import { Team } from '../../teams/entities';
+import { User } from '@modules/users/entities';
+import { Team } from '@modules/teams/entities';
 
 @Entity('url_mappings')
 export class UrlMapping {

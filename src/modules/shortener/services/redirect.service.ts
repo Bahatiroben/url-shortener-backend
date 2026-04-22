@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RedisService } from '@common/redis/services/redis.service';
 import { Repository } from 'typeorm';
 import { UrlMapping } from '../entities';
 import { ShortenerService } from './shortener.service';
-import { RedisService } from 'src/common/redis/services/redis.service';
 
 @Injectable()
 export class RedirectService {
