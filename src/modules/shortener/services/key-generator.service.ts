@@ -26,6 +26,13 @@ import { REDIS_KEYS, BUFFER_SIZE, REFILL_THRESHOLD, LOCK_TTL_SECONDS, COUNTER_SE
 export class KeyGeneratorService implements OnModuleInit {
   // todo: replace the logger with a custom enhanced logger.
   private readonly logger = console;
+  private readonly redisClient = this.redisService.getClient();
+
+  // Hardcoded — never regenerated at runtime
+  // ⚠️⚠️ This value must be set once and never to be changed on subsequent future commits.⚠️⚠️
+  // ⚠️⚠️⚠️ Its change will invalidate already generated keys ⚠️⚠️⚠️
+  // it is a shuffled version of alpha numeric values with case sensitivity to prevent bruteforce generation
+  private readonly ALPHABETS = 'mK4vL2pZoRqX7nYs0dWfTgJhUiAeB3Cj6kl1MNOPQVS5EFGHIuw8xyz9tDabcr';
  
   constructor(
     private readonly redisService: RedisService
@@ -79,7 +86,7 @@ export class KeyGeneratorService implements OnModuleInit {
    */
   private async ensureCounterSeeded(): Promise<void> {
     // SET key value NX — only sets if key does not exist
-    await this.redisService.getClient().set(REDIS_KEYS.ID_COUNTER, COUNTER_SEED, 'NX');
+    await this.redisClient.set(REDIS_KEYS.ID_COUNTER, COUNTER_SEED, 'NX');
   }
  
   /**
@@ -129,9 +136,9 @@ export class KeyGeneratorService implements OnModuleInit {
       const countAfterLock = await this.redisService.getListLength(REDIS_KEYS.KEY_BUFFER);
       if (countAfterLock >= threshold) return;
  
-      const needed = BUFFER_SIZE - countAfterLock;
-      this.logger.log(`Refilling buffer: ${countAfterLock} remaining, adding ${needed}`);
-      await this.fillBuffer(needed);
+      const numberOfNeededKeys = BUFFER_SIZE - countAfterLock;
+      this.logger.log(`Refilling buffer: ${countAfterLock} remaining, adding ${numberOfNeededKeys}`);
+      await this.fillBuffer(numberOfNeededKeys);
     } finally {
       await this.releaseLock(REDIS_KEYS.REFILL_LOCK);
     }
@@ -144,11 +151,9 @@ export class KeyGeneratorService implements OnModuleInit {
    * INCRBY guarantees each instance gets an exclusive, non-overlapping range.
    * e.g. Instance A gets 1000001–1001000, Instance B gets 1001001–1002000.
    */
-  private async fillBuffer(count: number): Promise<void> {
-    const client = this.redisService.getClient();
- 
+  private async fillBuffer(count: number): Promise<void> { 
     // Reserve the entire range atomically in a single round-trip
-    const endId = await client.incrby(REDIS_KEYS.ID_COUNTER, count);
+    const endId = await this.redisClient.incrby(REDIS_KEYS.ID_COUNTER, count);
     const startId = endId - count + 1;
  
     const keys: string[] = [];
@@ -157,6 +162,7 @@ export class KeyGeneratorService implements OnModuleInit {
     }
  
     // RPUSH keeps insertion order — keys are consumed LPOP (FIFO)
+    // split the keys array into multiple arrays for separate arrays in case we move to higher batches
     await this.redisService.pushToList(REDIS_KEYS.KEY_BUFFER, keys);
     this.logger.log(`Filled buffer with ${count} keys (IDs ${startId}–${endId})`);
   }
@@ -166,8 +172,7 @@ export class KeyGeneratorService implements OnModuleInit {
    * Used only when the buffer is completely empty.
    */
   private async generateInlineKey(): Promise<string> {
-    const client = this.redisService.getClient();
-    const id = await client.incr(REDIS_KEYS.ID_COUNTER);
+    const id = await this.redisClient.incr(REDIS_KEYS.ID_COUNTER);
     return this.encodeBase62(id);
   }
  
@@ -185,12 +190,12 @@ export class KeyGeneratorService implements OnModuleInit {
    *   56_800_235_584 → "9999999" (7 chars, ~56 billion combinations)
    */
   private encodeBase62(num: number): string {
-    const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    // Alpha numeric, case sensitive
     let encoded = '';
     let n = num;
  
     do {
-      encoded = chars[n % 62] + encoded;
+      encoded = this.ALPHABETS[n % 62] + encoded;
       n = Math.floor(n / 62);
     } while (n > 0);
  
@@ -216,80 +221,3 @@ export class KeyGeneratorService implements OnModuleInit {
     await client.del(lockKey);
   }
 }
-
-
-// @Injectable()
-// export class KeyGeneratorService implements OnModuleInit {
-//   private readonly KEY_BUFFER_SIZE = 1000;
-//   private readonly REDIS_KEY_BUFFER = 'url_shortener:key_buffer';
-
-//   constructor(
-//     @InjectRepository(UrlMapping)
-//     private readonly urlRepository: Repository<UrlMapping>,
-
-//     private readonly redisService: RedisService,
-//   ) {}
-
-//   async onModuleInit() {
-//     await this.preloadKeys();
-//   }
-
-//   private async preloadKeys() {
-//     const count = await this.redisService.getListLength(this.REDIS_KEY_BUFFER);
-//     if (count < this.KEY_BUFFER_SIZE / 2) {
-//       await this.generateAndStoreKeys(this.KEY_BUFFER_SIZE);
-//     }
-//   }
-
-//   private async generateAndStoreKeys(count: number) {
-//     const keys: string[] = [];
-//     let lastId = await this.getLastUsedId();
-
-//     for (let i = 0; i < count; i++) {
-//       lastId++;
-//       const key = this.encodeBase62(lastId);
-//       keys.push(key);
-//     }
-
-//     await this.redisService.pushToList(this.REDIS_KEY_BUFFER, keys);
-//   }
-
-//   async generateUniqueKey(): Promise<string> {
-//     let key = await this.redisService.popFromList(this.REDIS_KEY_BUFFER);
-
-//     if (!key) {
-//       await this.generateAndStoreKeys(this.KEY_BUFFER_SIZE);
-//       key = await this.redisService.popFromList(this.REDIS_KEY_BUFFER);
-//     }
-
-//     // Double-check uniqueness (safety net)
-//     const exists = await this.urlRepository.exists({ where: { shortKey: key } });
-//     if (exists) {
-//       return this.generateUniqueKey(); // recursive retry (rare)
-//     }
-
-//     return key;
-//   }
-
-//   private encodeBase62(num: number): string {
-//     const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//     let encoded = '';
-//     let n = num;
-
-//     do {
-//       encoded = chars[n % 62] + encoded;
-//       n = Math.floor(n / 62);
-//     } while (n > 0);
-
-//     return encoded.padStart(7, '0'); // Minimum 7 characters
-//   }
-
-//   private async getLastUsedId(): Promise<number> {
-//     const result = await this.urlRepository
-//       .createQueryBuilder('url')
-//       .select('MAX(url.id)', 'max')
-//       .getRawOne();
-
-//     return result?.max || 1000000; // Start from a safe number
-//   }
-// }

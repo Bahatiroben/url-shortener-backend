@@ -6,7 +6,7 @@ export const REDIS_KEYS = {
 } as const;
  
 // Tunables
-export const BUFFER_SIZE = 1000;         // How many keys to generate per batch
+export const BUFFER_SIZE = 10_000;         // How many keys to generate per batch
 export const REFILL_THRESHOLD = 0.2;     // Refill when buffer drops below 20%
 export const LOCK_TTL_SECONDS = 15;      // Lock expiry — prevents deadlock on crash
 export const COUNTER_SEED = 1_000_000;   // Start IDs here to ensure 7-char keys from day one
