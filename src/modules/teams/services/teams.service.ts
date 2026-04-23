@@ -44,6 +44,7 @@ export class TeamsService extends BaseService<Team, CreateTeamDto, UpdateTeamDto
 
     const user = await this.userRepository.findOne({ where: { email: dto.email } });
     if (!user) {
+      // invite the user if they don't exist already and on their confirmation, they will go on and update their details
       throw new NotFoundException('User not found');
     }
 

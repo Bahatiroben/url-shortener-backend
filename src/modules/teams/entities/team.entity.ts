@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, ManyToMany } from 'typeorm';
 import { User } from '@modules/users/entities';
 
 @Entity('teams')
@@ -13,12 +13,12 @@ export class Team {
   @JoinColumn({ name: 'ownerId' })
   owner: User;
 
-  @ManyToMany(() => User, (user) => user.teams)
-  members: User[];
-
   @Column()
   ownerId: string;
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

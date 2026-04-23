@@ -16,18 +16,11 @@ export class User {
   @Column({ nullable: true })
   name: string;
 
-  @Column({ default: 'user' })
-  role: string;
-
   @OneToMany(() => UrlMapping, (url) => url.user)
   urls: UrlMapping[];
 
   @OneToMany(() => Team, (team) => team.owner)
   ownedTeams: Team[];
-
-  @ManyToMany(() => Team, (team) => team.members)
-  teams: Team[]; 
-
 
   @CreateDateColumn()
   createdAt: Date;
