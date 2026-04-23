@@ -9,12 +9,12 @@ export class Team {
   @Column()
   name: string;
 
+  @Column()
+  ownerId: string;
+
   @ManyToOne(() => User, (user) => user.ownedTeams)
   @JoinColumn({ name: 'ownerId' })
   owner: User;
-
-  @Column()
-  ownerId: string;
 
   @CreateDateColumn()
   createdAt: Date;

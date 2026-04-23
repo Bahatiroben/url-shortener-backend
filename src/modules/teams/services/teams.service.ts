@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@modules/users/entities/user.entity';
 import { BaseService } from '@common/base/base.service';
-import { Team } from '../entities';
+import { Team, TeamMember } from '../entities';
 import { CreateTeamDto, UpdateTeamDto, AddTeamMemberDto } from '../dtos';
 
 @Injectable()
@@ -12,6 +12,10 @@ export class TeamsService extends BaseService<Team, CreateTeamDto, UpdateTeamDto
   constructor(
     @InjectRepository(Team)
     protected readonly repository: Repository<Team>,
+
+    @InjectRepository(TeamMember)
+    private readonly teamMemberRepository: Repository<TeamMember>,
+
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -29,14 +33,11 @@ export class TeamsService extends BaseService<Team, CreateTeamDto, UpdateTeamDto
   }
 
   async findUserTeams(userId: string) {
-    return this.repository.find({
-      where: [
-        { ownerId: userId },
-        { members: { id: userId } }   // If you have ManyToMany relation
-      ],
-      relations: ['owner'],
-      order: { createdAt: 'DESC' },
-    });
+    return this.repository
+      .createQueryBuilder('team')
+      .leftJoin('team_members', 'tm', 'tm.teamId = team.id AND tm.userId = :userId', { userId })
+      .orderBy('team.createdAt', 'DESC')
+      .getMany();
   }
 
   async addMember(teamId: string, dto: AddTeamMemberDto) {
@@ -51,12 +52,18 @@ export class TeamsService extends BaseService<Team, CreateTeamDto, UpdateTeamDto
     // Add logic for team membership (ManyToMany or separate TeamMember table)
     // For simplicity, we'll assume a members relation exists
 
+    const teamMember = this.teamMemberRepository.create({
+      userId: user.id,
+      teamId: team.id,
+      role: dto.role,
+    });
+    await this.teamMemberRepository.save(teamMember);
+
     return team;
   }
 
   async removeMember(teamId: string, userId: string) {
     const team = await this.findOne(teamId);
-    // Implement removal logic
-    return team;
+    return await this.teamMemberRepository.delete({userId})
   }
 }
