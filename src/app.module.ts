@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -15,6 +16,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { RedisModule } from '@common/redis/redis.module';
 import { TeamsModule } from '@modules/teams/teams.module';
 import { ShortenerModule } from '@modules/shortener/shortener.module';
+import { ResponseInterceptor, RlsContextInterceptor } from '@common/interceptors';
 
 @Module({
   imports: [
@@ -46,6 +48,16 @@ import { ShortenerModule } from '@modules/shortener/shortener.module';
     TeamsModule,
 ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RlsContextInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+  ],
 })
 export class AppModule {}
